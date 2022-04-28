@@ -63,12 +63,20 @@ public class BrotherlabelprintdartPlugin: FlutterPlugin, MethodCallHandler {
   private fun printLabelFromImage(printerIp: String, printerModel: Int, data: ByteArray, width : Int, height : Int) : String{
     val printer = Printer()
 
+
     val info = PrinterInfo()
 
     info.ipAddress = printerIp
-    info.printerModel = PrinterInfo.Model.valueFromID(printerModel)
+    info.printerModel = PrinterInfo.Model.QL_810W
     info.port = PrinterInfo.Port.NET
+    info.paperSize = PrinterInfo.PaperSize.CUSTOM
+    info.labelNameIndex = 21
+
+
+    
+
     printer.printerInfo = info
+
 
     val thread = Thread(Runnable {
       try {
@@ -77,7 +85,7 @@ public class BrotherlabelprintdartPlugin: FlutterPlugin, MethodCallHandler {
         //val result = PrinterStatus()
 
         val dataInt = IntArray(data.size / 2) {
-          (data[it * 2].toUByte().toInt() + (data[(it * 2) + 1].toInt() shl 8))
+          (data[it * 2].toInt() + (data[(it * 2) + 1].toInt() shl 8))
         }
 
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
@@ -104,24 +112,42 @@ public class BrotherlabelprintdartPlugin: FlutterPlugin, MethodCallHandler {
     val printer = Printer()
 
     val info = PrinterInfo()
+
+   
+
+
     info.ipAddress = printerIp
-    info.printerModel = PrinterInfo.Model.valueFromID(printerModel)
+    info.printerModel = PrinterInfo.Model.QL_810W
     info.port = PrinterInfo.Port.NET
+    info.paperSize = PrinterInfo.PaperSize.CUSTOM
+    info.labelNameIndex = 17  
     printer.printerInfo = info
 
+    Log.d("BROTHER LABEL PRINT: Label index is set to", info.labelNameIndex.toString())
+
+
     val thread = Thread(Runnable {
+      
       try {
+
         Log.d("BROTHER LABEL PRINT", "Thread started")
+       
 
         var result = PrinterStatus()
+        Log.d("BROTHER LABEL PRINT",result.toString())
+
 
         for(d in data) {
           val tmp = d.split("||")
+          Log.d("BROTHER LABEL PRINT",info.labelNameIndex.toString())
           when(tmp[0]) {
             "START" -> printer.startPTTPrint(tmp[1].toInt(), null)
             "TEXT" -> printer.replaceText(tmp[1])
             "END" -> result = printer.flushPTTPrint()
           }
+        }
+        if(result.errorCode == PrinterInfo.ErrorCode.ERROR_WRONG_LABEL) {
+          Log.e("BROTHER PRINTER ERROR: CHANGE LABEL INDEX OR PAPER SIZE", result.errorCode.toString())
         }
 
         if(result.errorCode != PrinterInfo.ErrorCode.ERROR_NONE) {
@@ -145,8 +171,10 @@ public class BrotherlabelprintdartPlugin: FlutterPlugin, MethodCallHandler {
     val info = PrinterInfo()
 
     info.ipAddress = printerIp
-    info.printerModel = PrinterInfo.Model.valueFromID(printerModel)
+    info.printerModel = PrinterInfo.Model.QL_810W
     info.port = PrinterInfo.Port.NET
+    info.paperSize = PrinterInfo.PaperSize.CUSTOM
+    info.labelNameIndex = 21
     printer.printerInfo = info
 
     val thread = Thread(Runnable {

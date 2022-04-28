@@ -15,8 +15,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final String ipOfPrinter = "192.168.68.128";
-  final PrinterModel printerModel = PrinterModel.RJ_2150;
+  final String ipOfPrinter = "192.168.15.6";
+  final PrinterModel printerModel = PrinterModel.QL_810W;
   String _printStatus = 'Initializing...';
 
   void print(bool bulk) async {
@@ -24,31 +24,16 @@ class _MyAppState extends State<MyApp> {
       _printStatus = "Running...";
     });
 
-    List<TemplateLabel> labels = <TemplateLabel>[];
+    List<TemplateLabel> labels = [];
 
-    if (bulk) {
-      for (int i = 0; i < 5; i++) {
-        labels.add(TemplateLabel(i < 3 ? 1 : 2, [
-          "0 : Label $i",
-          "1 : 31/03/2020 - 12:00",
-          "2 : Primael.Q",
-          "3 : 02/04/2020",
-          "4 : 03/04/2020",
-          "5 : 12:00",
-          "6 : 12:00"
-        ]));
-      }
-    } else {
-      labels.add(TemplateLabel(1, [
-        "0 : Cheddar Mozzarella Rapé",
-        "1 : 31/03/2020 - 12:00",
-        "2 : Primael.Q",
-        "3 : 02/04/2020",
-        "4 : 03/04/2020",
-        "5 : 12:00",
-        "6 : 12:00"
-      ]));
-    }
+    labels.add(
+      TemplateLabel(
+        5,
+        [
+          'nome',
+        ],
+      ),
+    );
 
     String result;
     try {
